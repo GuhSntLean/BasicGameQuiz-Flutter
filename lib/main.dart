@@ -1,20 +1,35 @@
 import 'package:flutter/material.dart';
+import 'widgets/quiz.dart';
+import 'widgets/result.dart';
 
-main() {
-  runApp(new QuestionApp());
-}
+main() => runApp(new QuestionApp());
 
-class QuestionAppState extends State<QuestionApp> {
-  var valueState = 0;
+class _QuestionAppState extends State<QuestionApp> {
+  int _selectionQuestion = 0;
 
-  void response() {
-    valueState++;
-    print(valueState);
+  final _answers = const [
+    {
+      'question': 'Qual é a sua cor favorita ?',
+      'qanswer': ['Preto', 'Vermelho', 'Verde', 'Branco'],
+    },
+    {
+      'question': 'Qual é o seu animal favorito ?',
+      'qanswer': ['Coelho', 'Cobra', 'Elefante', 'Leão'],
+    },
+    {
+      'question': 'Qual é o seu curso favorito ?',
+      'qanswer': ['ADS', 'ENG-E', 'ENG-M', 'ENGE-C'],
+    },
+  ];
+
+  void _response() {
+    setState(() {
+      _selectionQuestion++;
+    });
   }
 
-  void longResponse() {
-    valueState--;
-    print(valueState);
+  bool get haveSelectionQuestion {
+    return _selectionQuestion < _answers.length;
   }
 
   @override
@@ -23,21 +38,16 @@ class QuestionAppState extends State<QuestionApp> {
       debugShowCheckedModeBanner: false,
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Question application'),
+          title: Center(
+              child: Text('Question application', textAlign: TextAlign.center)),
         ),
-        body: Column(
-          children: <Widget>[
-            Text('Olha lá'),
-            RaisedButton(
-              child: Text(
-                'Teste',
-              ),
-              color: Colors.pink,
-              onPressed: response,
-              onLongPress: longResponse,
-            ),
-          ],
-        ),
+        body: haveSelectionQuestion
+            ? Quiz(
+                answers: _answers,
+                selectionQuestion: _selectionQuestion,
+                response: _response,
+              )
+            : Result(),
       ),
     );
   }
@@ -45,7 +55,7 @@ class QuestionAppState extends State<QuestionApp> {
 
 class QuestionApp extends StatefulWidget {
   @override
-  QuestionAppState createState() {
-    return QuestionAppState();
+  _QuestionAppState createState() {
+    return _QuestionAppState();
   }
 }
